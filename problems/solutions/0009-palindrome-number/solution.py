@@ -4,4 +4,4 @@ class Solution:
         while x>0:
             reverso = reverso*10+x%10
             x//=10
-        return True if reverso==numero else False
+        return reverso==numero
