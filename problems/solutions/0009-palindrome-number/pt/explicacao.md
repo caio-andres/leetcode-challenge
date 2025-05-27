@@ -55,7 +55,7 @@ Não adiantará, pois vamos apenas somar os dígitos: `1 + 2 + 1 = 4`
 
 ### ✅ Solução correta:
 
-A cada loop temos que acrescentar à casa numérica superior:
+A cada loop temos que acrescentar à casa numérica superior e não esquecer que x servirá como variável do loop:
 
 ```text
 x = 121, reverso = 0
