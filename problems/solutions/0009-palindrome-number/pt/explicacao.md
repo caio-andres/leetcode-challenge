@@ -37,9 +37,9 @@ No código, usamos o **próprio número passado no argumento da função**, porq
 Usamos `while` como loop para a operação.
 
 ```
-121 ÷ 10 → resto = 1, quociente = 12
-12 ÷ 10 → resto = 2, quociente = 1
-1 ÷ 10 → resto = 1, quociente = 0
+121 ÷ 10 → resto(%) = 1, quociente(//) = 12
+12 ÷ 10 → resto(%) = 2, quociente(//) = 1
+1 ÷ 10 → resto(%) = 1, quociente(//) = 0
 ```
 
 - O resto representa o início da leitura reversa
@@ -83,4 +83,4 @@ q, r = divmod(x, 10)
 
 - Use `while x > 0` para evitar negativos
 - Todo número de 1 a 9 é palíndromo. um único loop será usado. Se 1=<x<=9, divmod(x, 10) -> (0, x)
-- `while x` também funciona, mas `x > 0` é mais claro
+- `while x` também funciona, mas precisaria de uma condicional antes para números negativos.
