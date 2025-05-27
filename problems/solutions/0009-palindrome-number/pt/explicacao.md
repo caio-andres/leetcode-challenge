@@ -1,49 +1,86 @@
-Como se obter um palindromo sem usar string?
-R = Revertendo as casas numéricas.
-Exemplo:
-121 pode ser reescrito como 100 + 20 + 1 ou (1*10^2)+(2*10^1) + (1*10^0)
--> 100 é 1 na casa das centenas
--> 20 é 2 na casa das dezenas
--> 1 é um na casa das unidades
-Então, revertendo 
--> 1 da unidade vira da centena 100
--> 2 da dezena continua 20
--> 1 da centena vira da unidade 1
-121 é igual a 121
+## 🔄 Como obter um palíndromo sem usar string?
 
-122 -> 100 + 20 + 2
-revertendo -> 200 + 20 + 1
-122 é diferente de 221
+**Resposta:** Revertendo as casas numéricas.
 
-Podemos deduzir se dividimos por 10 obtemos a casa numérica e como vamos do início para o final precisamos também multiplicar por 10.
-No código, vamos usar o próprio número passado no argumento da função porque não sabemos quntas vezes serão necessárias fazer a operação.Usamos o while como loop para operação.
- 121                    | 10
- 1(resto)%(operador)      12(quociente) //(operador)
+### Exemplo:
+121 pode ser reescrito como:
 
-Então, precisamos do resto que representa o inicio o 1 de 121, o primeiro 1. E no loop seguinte usamos o quociente 12
+```
+100 + 20 + 1
+= (1 * 10^2) + (2 * 10^1) + (1 * 10^0)
+```
 
-12 | 10
-1    2
+- 100 é 1 na casa das centenas  
+- 20 é 2 na casa das dezenas  
+- 1 é 1 na casa das unidades  
 
-O 2 representa o 20 de 121
+Revertendo:
 
-1  | 10
-1    0
+- 1 da unidade vira da centena → 100  
+- 2 da dezena continua → 20  
+- 1 da centena vira da unidade → 1  
 
-O 1 representa 100 de 121, porque estamos lendo o inverso. 
+➡️ 121 é igual a 121 (é um palíndromo)
 
-O resto vai ser o numero que vamos adicionar a cada loop e quociente será nossa variavel que encerará o loop.
-Se fizermos só reverso += x%10, não adiantará pq vamos só somar os digitos que resulta em 4(1+2+1)
-A cada loop temos que acrescentar a casa numerica superior
-121 e reverso=0
-(1) Loop -> reverso += (10*0) + 1(resto ou %) 
-(2)Loop -> reverso += (10*1) + 2(resto ou %)
-(3)Loop -> reverso += (12*10) + 1
+Outro exemplo:  
+122 → 100 + 20 + 2  
+Revertendo → 200 + 20 + 1 → **122 ≠ 221**
 
-Escrevendo em código a lógica a cima para obter o numero invertido -> reverso += reverso*10 + x%10
-Para guarda o quociente e para variavel do loop -> x //= 10
+---
 
-Observação: se quiser uma função que retorne o quociente e resto use divmod(x, 10) -> (x//10, x%10)
-com "while x>0" elimina necessidade de colocar uma condicional para ver se é um número negativo
-Outra Observação: todo numero entre 1 a 9 é palindromo. E vai ser feito um único loop porque se x estiver entre 1 e 9. divmod(x, 10) -> (0, x)
-Poderia ser só "while x" mas como tem a condicional dos numeros não poderem ser negtivos usa-se "while x>0".
+### 🔢 Deduções
+
+Se dividimos por 10, obtemos a casa numérica.  
+Como vamos do final para o início, precisamos também **multiplicar por 10** para inverter.
+
+No código, usamos o **próprio número passado no argumento da função**, porque **não sabemos quantas vezes será necessário fazer a operação**.  
+Usamos `while` como loop para a operação.
+
+```
+121 ÷ 10 → resto = 1, quociente = 12
+12 ÷ 10 → resto = 2, quociente = 1
+1 ÷ 10 → resto = 1, quociente = 0
+```
+
+- O resto representa o início da leitura reversa
+- O quociente será usado no loop seguinte até zerar
+
+---
+
+Se fizermos apenas:
+```python
+reverso += x % 10
+```
+Não adiantará, pois vamos apenas somar os dígitos: `1 + 2 + 1 = 4`
+
+### ✅ Solução correta:
+
+A cada loop temos que acrescentar à casa numérica superior:
+
+```text
+x = 121, reverso = 0
+
+Loop 1 → reverso = 0 * 10 + 1 → 1
+Loop 2 → reverso = 1 * 10 + 2 → 12
+Loop 3 → reverso = 12 * 10 + 1 → 121
+```
+
+**Fórmula:**
+
+```python
+reverso = reverso * 10 + x % 10
+x //= 10
+```
+
+---
+
+### 💡 Dicas úteis:
+
+- Para obter quociente e resto ao mesmo tempo:
+```python
+q, r = divmod(x, 10)
+```
+
+- Use `while x > 0` para evitar negativos
+- Todo número de 1 a 9 é palíndromo. um único loop será usado. Se 1=<x<=9, divmod(x, 10) -> (0, x)
+- `while x` também funciona, mas `x > 0` é mais claro
