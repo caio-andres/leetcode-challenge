@@ -87,6 +87,9 @@ The repository includes a script to automatically fetch problems from LeetCode a
    - Generate description files in both English and Portuguese
    - Create a template solution file in Python
 
+
+**Observation: Check if problem generate is the same what you wish to commit to this repo.
+If not, check title problem in here <a href="https://leetcode.com/api/problems/all/">LINK</a> and catch it in "question id".**
 ### Directory Structure
 
 After running the script, a new problem directory will be created following the repository structure pattern:
