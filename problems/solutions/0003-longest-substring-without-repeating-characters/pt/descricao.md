@@ -2,8 +2,6 @@
 
 Dada uma string `s`, encontre o comprimento da **maior substring** (sequência contínua de caracteres) **sem caracteres repetidos**.
 
----
-
 ## 🔍 Exemplos
 
 ## Example 1:

@@ -2,8 +2,6 @@
 
 Usamos a técnica da **janela deslizante (Sliding Window)** para encontrar de forma eficiente a substring mais longa sem caracteres repetidos.
 
----
-
 ### 🧠 Intuição
 
 Em vez de verificar todas as possíveis substrings (o que seria muito lento — O(n²)), mantemos o controle de uma **janela** de caracteres que são todos únicos.

@@ -1,58 +1,89 @@
-## 🔍 Explanation - Longest Substring Without Repeating Characters
+# 🔍 Explanation - Longest Substring Without Repeating Characters
 
-We use the **Sliding Window** technique to efficiently find the longest substring without repeating characters.
-
-### 🧠 Intuition
-
-Instead of checking every possible substring (which would be very slow — O(n²)), we keep track of a **window** of characters that are all unique.
-
-As we iterate over the string, we expand the window to include new characters. If we find a duplicate, we shrink the window from the left until all characters are unique again.
-
-This approach ensures that we look at each character only once or twice — making it **linear time**.
+This solution uses the **Sliding Window** technique combined with a **dictionary (`last`)** to efficiently find the **longest substring without repeating characters**.
 
 ---
 
-### 🧰 Algorithm Steps
+## 🧠 Intuition
 
-1. Create a `Set` to keep track of the characters currently in the window.
-2. Use two pointers: `left` (start of the window) and `right` (end of the window).
-3. Loop through the string with the `right` pointer:
-   - If `s[right]` is not in the `Set`, add it and update the max length.
-   - If `s[right]` **is** in the `Set`, it means there's a duplicate, so:
-     - Remove characters from the `Set` starting from the `left` pointer,
-     - Move the `left` pointer forward until the duplicate is removed.
-4. Repeat until the end of the string is reached.
-5. Return the maximum length found.
+Instead of checking all possible substrings (**O(n²)**), we use two pointers (`left` and `right`) to maintain a **dynamic window** that **always contains unique characters**.
+
+- As we iterate through the string with `right`, we expand the window.
+- If we find a **repeated character** **inside the current window**, we move `left` to **just after its last occurrence**.
+- We keep track of the maximum length (`best`) found so far.
+
+This strategy ensures that each character is processed at most **once**, resulting in **O(n)** time complexity.
 
 ---
 
-### 💻 Example in Action: `"pwwkew"`
+## 🧰 Algorithm Steps
 
-Let's walk through the string:
-
-- Start with empty window, max = 0.
-- Add `p` → no duplicate → window = `"p"`, max = 1.
-- Add `w` → no duplicate → window = `"pw"`, max = 2.
-- Add `w` again → duplicate → shrink window from left → remove `p`, then `w`.
-- Add `w` again → window = `"w"`, max still 2.
-- Add `k` → window = `"wk"`, max = 2.
-- Add `e` → window = `"wke"`, max = 3.
-- Add `w` again → duplicate → remove until duplicate is gone → window becomes `"kew"`.
-
-✅ Final result: max length = **3**.
-
----
-
-### ⏱️ Complexity
-
-- **Time Complexity:** O(n)
-  - Each character is added and removed from the Set at most once.
-- **Space Complexity:** O(min(n, m))
-  - Where `m` is the size of the character set (e.g., 26 for lowercase letters, or more if symbols are included).
+1. Create a **dictionary `last`** to store the **last index** where each character appeared.
+2. Initialize:
+   - `left` → start of the current window.
+   - `best` → maximum length found so far.
+3. Iterate through the string using `right`:
+   - If `s[right]` exists in `last` **and** `last[s[right]] >= left`:
+     - Move `left` to `last[s[right]] + 1` to skip the duplicate.
+   - Update `last[s[right]]` with the current index.
+   - Calculate the current window size: `right - left + 1`.
+   - Update `best` with the maximum length found so far.
+4. Return `best` at the end.
 
 ---
 
-### 🧼 Clean and Efficient
+## 💻 Step-by-Step Example: `"abnjba"`
 
-This solution avoids brute force and gives a clean and efficient way to solve the problem — it's a great example of how sliding windows and Sets can be powerful in string manipulation problems.
+| **Iteration** | **right** | **ch** | **left** | **last**                     | **Current Window** | **best** |
+|--------------|-----------|--------|---------|------------------------------|--------------------|----------|
+| 1 | 0 | a | 0 | {"a": 0} | `"a"` | 1 |
+| 2 | 1 | b | 0 | {"a": 0, "b": 1} | `"ab"` | 2 |
+| 3 | 2 | n | 0 | {"a": 0, "b": 1, "n": 2} | `"abn"` | 3 |
+| 4 | 3 | j | 0 | {"a": 0, "b": 1, "n": 2, "j": 3} | `"abnj"` | 4 |
+| 5 | 4 | b | **2** | {"a": 0, "b": 4, "n": 2, "j": 3} | `"njb"` | 4 |
+| 6 | 5 | a | 2 | {"a": 5, "b": 4, "n": 2, "j": 3} | `"njba"` | 4 |
 
+✅ **Longest substring without repetition:** `"abnj"`, `"njba"` or `"bnjb"`  
+✅ **Final Result:** `best = 4`
+
+---
+
+## ⏱️ Complexity
+
+- **Time Complexity:** `O(n)`  
+  Each character is visited **once** at most.
+- **Space Complexity:** `O(min(n, m))`  
+  Where `m` is the number of unique possible characters.
+
+---
+
+## 🧼 Clean and Efficient
+
+This approach avoids brute force and uses a **dictionary** to quickly find the previous occurrence of characters.  
+It's more efficient than using a `Set` because we **don’t need to manually remove elements** — we just move `left` based on the stored last index.
+
+---
+
+## 📌 Final Code
+
+```python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        last = {}      # char -> last seen index
+        left = 0       # start of the window
+        best = 0       # maximum length found
+
+        for right, ch in enumerate(s):
+            # If character already seen and is inside the current window
+            if ch in last and last[ch] >= left:
+                # Move the start of the window after the duplicate
+                left = last[ch] + 1
+
+            # Update the last seen index of the character
+            last[ch] = right
+
+            # Update the maximum length found so far
+            best = max(best, right - left + 1)
+
+        return best
+```
