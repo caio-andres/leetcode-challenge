@@ -1,57 +1,89 @@
-## 🔍 Explicação - Substring Mais Longa Sem Caracteres Repetidos
+# 🔍 Explicação - Substring Mais Longa Sem Caracteres Repetidos
 
-Usamos a técnica da **janela deslizante (Sliding Window)** para encontrar de forma eficiente a substring mais longa sem caracteres repetidos.
-
-### 🧠 Intuição
-
-Em vez de verificar todas as possíveis substrings (o que seria muito lento — O(n²)), mantemos o controle de uma **janela** de caracteres que são todos únicos.
-
-À medida que percorremos a string, expandimos a janela para incluir novos caracteres. Se encontrarmos um caractere repetido, diminuímos a janela a partir da esquerda até que todos os caracteres sejam únicos novamente.
-
-Essa abordagem garante que analisamos cada caractere apenas uma ou duas vezes — tornando o tempo de execução **linear**.
+Essa solução usa a técnica da **janela deslizante (Sliding Window)** junto com um **dicionário (`last`)** para encontrar de forma eficiente a **maior substring sem caracteres repetidos**.
 
 ---
 
-### 🧰 Passos do Algoritmo
+## 🧠 Intuição
 
-1. Criar um `Set` para armazenar os caracteres atualmente na janela.
-2. Usar dois ponteiros: `left` (início da janela) e `right` (fim da janela).
-3. Percorrer a string com o ponteiro `right`:
-   - Se `s[right]` **não** estiver no `Set`, adicioná-lo e atualizar o comprimento máximo.
-   - Se `s[right]` **estiver** no `Set`, isso significa que há um caractere repetido, então:
-     - Remover caracteres do `Set` a partir do ponteiro `left`,
-     - Mover o ponteiro `left` para frente até que o caractere repetido seja removido.
-4. Repetir até alcançar o final da string.
-5. Retornar o maior comprimento encontrado.
+Em vez de verificar todas as substrings possíveis (**O(n²)**), usamos dois ponteiros (`left` e `right`) para manter uma **janela dinâmica** que **sempre contém caracteres únicos**.
+
+- Conforme percorremos a string com `right`, expandimos a janela.
+- Se encontrarmos um **caractere repetido** que está **dentro da janela**, movemos `left` para **logo após a última ocorrência** desse caractere.
+- Mantemos atualizado o maior tamanho de substring (`best`) encontrado até agora.
+
+Essa estratégia garante que cada caractere seja processado no máximo **uma vez**, resultando em um tempo de execução **O(n)**.
 
 ---
 
-### 💻 Exemplo Passo a Passo: `"pwwkew"`
+## 🧰 Passos do Algoritmo
 
-Vamos percorrer a string:
-
-- Começamos com a janela vazia, `max = 0`.
-- Adicionamos `p` → sem repetição → janela = `"p"`, `max = 1`.
-- Adicionamos `w` → sem repetição → janela = `"pw"`, `max = 2`.
-- Adicionamos `w` novamente → repetição → encolher janela → remover `p`, depois `w`.
-- Adicionamos `w` novamente → janela = `"w"`, `max` continua 2.
-- Adicionamos `k` → janela = `"wk"`, `max = 2`.
-- Adicionamos `e` → janela = `"wke"`, `max = 3`.
-- Adicionamos `w` novamente → repetição → remover até eliminar duplicata → janela vira `"kew"`.
-
-✅ Resultado final: comprimento máximo = **3**.
-
----
-
-### ⏱️ Complexidade
-
-- **Complexidade de Tempo:** O(n)  
-  - Cada caractere é adicionado e removido do Set no máximo uma vez.
-- **Complexidade de Espaço:** O(min(n, m))  
-  - Onde `m` é o tamanho do conjunto de caracteres (por exemplo, 26 para letras minúsculas, ou mais se incluir símbolos).
+1. Criar um **dicionário `last`** para armazenar o **último índice** em que cada caractere apareceu.
+2. Inicializar:
+   - `left` → início da janela.
+   - `best` → comprimento máximo encontrado.
+3. Percorrer a string com `right`:
+   - Se `s[right]` já foi visto **e** `last[s[right]] >= left`:
+     - **Mover o início da janela** (`left`) para `last[s[right]] + 1`.
+   - Atualizar `last[s[right]]` com o índice atual.
+   - Calcular o tamanho da janela: `right - left + 1`.
+   - Atualizar `best` com o **máximo** encontrado.
+4. Retornar `best` no final.
 
 ---
 
-### 🧼 Limpo e Eficiente
+## 💻 Exemplo Passo a Passo: `"abnjba"`
 
-Essa solução evita o uso de força bruta e oferece uma forma limpa e eficiente de resolver o problema — é um ótimo exemplo de como a técnica de janela deslizante combinada com Sets pode ser poderosa na manipulação de strings.
+| **Iteração** | **right** | **ch** | **left** | **last**                     | **Janela atual** | **best** |
+|-------------|-----------|--------|---------|----------------------------|------------------|----------|
+| 1 | 0 | a | 0 | {"a": 0} | `"a"` | 1 |
+| 2 | 1 | b | 0 | {"a": 0, "b": 1} | `"ab"` | 2 |
+| 3 | 2 | n | 0 | {"a": 0, "b": 1, "n": 2} | `"abn"` | 3 |
+| 4 | 3 | j | 0 | {"a": 0, "b": 1, "n": 2, "j": 3} | `"abnj"` | 4 |
+| 5 | 4 | b | **2** | {"a": 0, "b": 4, "n": 2, "j": 3} | `"njb"` | 4 |
+| 6 | 5 | a | 2 | {"a": 5, "b": 4, "n": 2, "j": 3} | `"njba"` | 4 |
+
+✅ **Maior substring sem repetição:** `"abnj"`, `"njba"` ou `"bnjb"`  
+✅ **Resultado final:** `best = 4`
+
+---
+
+## ⏱️ Complexidade
+
+- **Tempo:** `O(n)`  
+  Cada caractere é visitado **uma vez**.
+- **Espaço:** `O(min(n, m))`  
+  Onde `m` é o número de caracteres distintos.
+
+---
+
+## 🧼 Limpo e Eficiente
+
+Essa abordagem evita a força bruta e usa um **dicionário** para otimizar o cálculo do início da janela.  
+É mais eficiente que usar `Set`, porque **não precisamos remover manualmente elementos** — basta mover `left` com base no último índice conhecido.
+
+---
+
+## 📌 Código Final
+
+```python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        last = {}      # char -> último índice em que apareceu
+        left = 0       # início da janela
+        best = 0       # tamanho máximo encontrado
+
+        for right, ch in enumerate(s):
+            # Se o caractere já foi visto e está dentro da janela atual
+            if ch in last and last[ch] >= left:
+                # Move o início da janela para depois da última ocorrência
+                left = last[ch] + 1
+
+            # Atualiza o último índice do caractere
+            last[ch] = right
+
+            # Atualiza o tamanho máximo encontrado
+            best = max(best, right - left + 1)
+
+        return best
+```
